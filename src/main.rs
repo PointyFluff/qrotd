@@ -2,6 +2,7 @@ use qrcode::QrCode;
 use image::Luma;
 use structopt::StructOpt;
 use std::time::SystemTime;
+use std::fs;
 
 // how should this app behave?
 // run as a daemon or one time
@@ -24,6 +25,9 @@ struct Options {
 
 fn main() {
     let options = Options::from_args();
+    let fortunes_file = String::from("/usr/share/fortunes");
+    let data = fs::read(fortunes_file).expect("unable to read file");
+    let mut fortunes: Vec<Vec<u8>> = Vec::new();
     let timestamp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
     let file_name = timestamp.to_string() + ".png";
     let code = QrCode::new(options.message).unwrap();
